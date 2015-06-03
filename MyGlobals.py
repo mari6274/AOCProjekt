@@ -3,6 +3,7 @@ __author__ = 'mario'
 class MyVidGlobals(object):
     vid1LastFrame = None
     vid1LastFrameClean = None
+    previousFrameClean = None
     vid1 = None
     imgWindowName = "okno"
     p1 = None
@@ -12,7 +13,7 @@ class MyVidGlobals(object):
     circleRadius = 4
     vid2 = None
     mask = None
-    maskRadius = 8
+    maskRadius = 16
     videoTypes = [("video files", ("*.m4v", "*.mp4", "*.avi"))]
 
 class MyImgGlobals(object):

@@ -85,30 +85,40 @@ def refreshMask():
     circle(mg.mask, mg.p4, mg.maskRadius, 255, thickness=-1)
 
 
+def best(p, crns):
+    t1 = (crns[0][0][0], crns[0][0][1])
+    for x in crns:
+        tup = (x[0][0], x[0][1])
+        if distance(p, tup) < distance(p, t1):
+            t1 = tup
+    if distance(p, t1) > 20:
+        return p
+    else:
+        return t1
+
+
 def corners():
     refreshMask()
 
-    goodFeaturesToTrack(cvtColor(mg.previousFrameClean, COLOR_BGR2GRAY), 4, 0.1, 8, mask=mg.mask)
-    crns = goodFeaturesToTrack(cvtColor(mg.vid1LastFrameClean, COLOR_BGR2GRAY), 4, 0.1, 8, useHarrisDetector=True)
-    crns = numpy.int32(crns)
-    mg.p1 = (crns[0][0][0], crns[0][0][1])
-    mg.p2 = (crns[1][0][0], crns[1][0][1])
-    mg.p3 = (crns[2][0][0], crns[2][0][1])
-    mg.p4 = (crns[3][0][0], crns[3][0][1])
+    crns1 = goodFeaturesToTrack(cvtColor(mg.previousFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True, mask=mg.mask)
+    if crns1 != None: crns1 = numpy.int32(crns1)
+    crns2 = goodFeaturesToTrack(cvtColor(mg.vid1LastFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True, mask=mg.mask)
+    if crns2 != None: crns2 = numpy.int32(crns2)
+
+    mg.p1 = best(mg.p1, crns2)
+    mg.p2 = best(mg.p2, crns2)
+    mg.p3 = best(mg.p3, crns2)
+    mg.p4 = best(mg.p4, crns2)
 
 
-    # orb = ORB(4)
-    # kp1, des1 = orb.detectAndCompute(cvtColor(mg.previousFrameClean, COLOR_BGR2GRAY), mg.mask)
-    # kp2, des2 = orb.detectAndCompute(cvtColor(mg.vid1LastFrameClean, COLOR_BGR2GRAY), None)
-    # des1 = numpy.float32(des1)
-    # des2 = numpy.float32(des2)
-    #
-    # index_params = dict(algorithm = 0, trees = 5)
-    # search_params = dict(checks=50)
-    # flann = FlannBasedMatcher(index_params, search_params)
-    # matches = flann.match(des1,des2)
+    #mask
+    temp = numpy.zeros(mg.vid1LastFrame.shape[:2])
+    for cr in crns2:
+        circle(temp, (cr[0][0], cr[0][1]), mg.circleRadius, 255, -1)
 
-
+    imshow("temp", temp)
+    waitKey(0)
+    #mask
 
 
 def go():
@@ -126,15 +136,15 @@ def go():
     setMouseCallback(mg.imgWindowName, onMouseClick)
     imshow(mg.imgWindowName, mg.vid1LastFrame)
     waitKey(0)
-    setMouseCallback(mg.imgWindowName, lambda: None)
+    setMouseCallback(mg.imgWindowName, lambda a1, a2, a3, a4, a5: None)
 
     while True:
         innerFrame = mg.vid2.read()[1]
         fillPoly(mg.vid1LastFrameClean, numpy.array([[mg.p1, mg.p2, mg.p4, mg.p3]]), (0,0,0))
         imshow("video", mg.vid1LastFrameClean+getTransformed(innerFrame))
+        mg.previousFrameClean = mg.vid1LastFrameClean
         ret, mg.vid1LastFrame = mg.vid1.read()
         mg.vid1LastFrameClean = numpy.copy(mg.vid1LastFrame)
-        mg.previousFrameClean = mg.vid1LastFrameClean
         corners()
         if not ret:
             break
