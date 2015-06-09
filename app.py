@@ -1,3 +1,4 @@
+#!/usr/bin/python
 __author__ = 'mario'
 
 import inimage

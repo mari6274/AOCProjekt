@@ -101,8 +101,10 @@ def corners():
     refreshMask()
 
     crns1 = goodFeaturesToTrack(cvtColor(mg.previousFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True, mask=mg.mask)
+    # crns1 = goodFeaturesToTrack(cvtColor(mg.previousFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True)
     if crns1 != None: crns1 = numpy.int32(crns1)
     crns2 = goodFeaturesToTrack(cvtColor(mg.vid1LastFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True, mask=mg.mask)
+    # crns2 = goodFeaturesToTrack(cvtColor(mg.vid1LastFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True)
     if crns2 != None: crns2 = numpy.int32(crns2)
 
     mg.p1 = best(mg.p1, crns2)
@@ -112,12 +114,12 @@ def corners():
 
 
     #mask
-    temp = numpy.zeros(mg.vid1LastFrame.shape[:2])
-    for cr in crns2:
-        circle(temp, (cr[0][0], cr[0][1]), mg.circleRadius, 255, -1)
-
-    imshow("temp", temp)
-    waitKey(0)
+    # temp = numpy.zeros(mg.vid1LastFrame.shape[:2])
+    # for cr in crns2:
+    #     circle(temp, (cr[0][0], cr[0][1]), mg.circleRadius, 255, -1)
+    #
+    # imshow("temp", temp)
+    # waitKey(0)
     #mask
 
 
