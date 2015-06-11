@@ -9,7 +9,6 @@ import tkFileDialog
 import numpy
 from MyGlobals import MyVidGlobals as mg
 import copy
-from functions import *
 
 
 def distance(point1, point2):
@@ -100,11 +99,11 @@ def best(p, crns):
 def corners():
     refreshMask()
 
-    crns1 = goodFeaturesToTrack(cvtColor(mg.previousFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True, mask=mg.mask)
-    # crns1 = goodFeaturesToTrack(cvtColor(mg.previousFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True)
+    # crns1 = goodFeaturesToTrack(cvtColor(mg.previousFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True, mask=mg.mask)
+    crns1 = goodFeaturesToTrack(cvtColor(mg.previousFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True)
     if crns1 != None: crns1 = numpy.int32(crns1)
-    crns2 = goodFeaturesToTrack(cvtColor(mg.vid1LastFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True, mask=mg.mask)
-    # crns2 = goodFeaturesToTrack(cvtColor(mg.vid1LastFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True)
+    # crns2 = goodFeaturesToTrack(cvtColor(mg.vid1LastFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True, mask=mg.mask)
+    crns2 = goodFeaturesToTrack(cvtColor(mg.vid1LastFrameClean, COLOR_BGR2GRAY), 50, 0.01, 4, useHarrisDetector=True)
     if crns2 != None: crns2 = numpy.int32(crns2)
 
     mg.p1 = best(mg.p1, crns2)
